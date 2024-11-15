@@ -154,3 +154,243 @@ Se você quiser visualizar a matriz de correlação de uma maneira mais gráfica
 # Visualizar a matriz de correlação graficamente
 corrplot(cor_matrix, method="circle")
 ```
+
+```{r}
+# Contar as ocorrências de cada valor na coluna 'genero'
+gender_counts <- table(df$genero)
+
+# Criar o gráfico de barras
+barplot(
+  gender_counts,
+  col = c("blue", "pink"),
+  main = "Distribuição Quantitativa por Gênero",
+  xlab = "Gênero",
+  ylab = "Quantidade",
+  las = 1
+)
+
+```
+
+```{r}
+# Contar as ocorrências de cada valor na coluna 'raca'
+contagem_valores_unicos <- table(df$raca)
+print(contagem_valores_unicos)
+
+# Criar o gráfico de barras
+barplot(
+  contagem_valores_unicos,
+  col = c("blue", "pink", "green", "red"),
+  main = "Distribuição Quantitativa por Raça",
+  xlab = "Raça",
+  ylab = "Quantidade",
+  las = 1
+)
+
+```
+
+```{r}
+# Contar as ocorrências de cada valor na coluna 'clasocial'
+contagem_valores_unicos <- table(df$clasocial)
+print(contagem_valores_unicos)
+
+# Criar o gráfico de barras
+barplot(
+  contagem_valores_unicos,
+  col = c("blue", "pink", "green"),
+  main = "Distribuição Quantitativa por Classe Social",
+  xlab = "Classe Social",
+  ylab = "Quantidade",
+  las = 1 
+)
+
+```
+
+```{r}
+# Contar as ocorrências de cada valor na coluna 'tipescola'
+contagem_valores_unicos <- table(df$tipescola)
+print(contagem_valores_unicos)
+
+# Criar o gráfico de barras
+barplot(
+  contagem_valores_unicos,
+  col = c("blue", "pink", "green", "red"),
+  main = "Distribuição Quantitativa por Tipo Escolar",
+  xlab = "Tipo Escolar",
+  ylab = "Quantidade",
+  las = 1
+)
+
+```
+
+```{r}
+# Contar as ocorrências de cada valor na coluna 'programa'
+contagem_valores_unicos <- table(df$programa)
+print(contagem_valores_unicos)
+
+# Criar o gráfico de barras
+barplot(
+  contagem_valores_unicos,
+  col = c("blue", "pink", "green", "red"),
+  main = "Distribuição Quantitativa por Tipo Programa",
+  xlab = "Tipo Programa",
+  ylab = "Quantidade",
+  las = 1
+)
+
+```
+
+```{r}
+# Criar o histograma
+hist(
+  df$ler,
+  breaks = 10,         # Número de intervalos (bins)
+  col = "skyblue",     # Cor das barras
+  border = "black",    # Cor da borda das barras
+  main = "Distribuição da Pontuação Da Leitura",
+  xlab = "Pontuação",
+  ylab = "Quantidade"
+)
+
+```
+
+```{r}
+# Criar o histograma
+hist(
+  df$escrever,
+  breaks = 10,         # Número de intervalos (bins)
+  col = "skyblue",     # Cor das barras
+  border = "black",    # Cor da borda das barras
+  main = "Distribuição da Pontuação Da Escrita",
+  xlab = "Pontuação",
+  ylab = "Quantidade"
+)
+
+```
+
+```{r}
+# Criar o histograma
+hist(
+  df$matematica,
+  breaks = 10,         # Número de intervalos (bins)
+  col = "skyblue",     # Cor das barras
+  border = "black",    # Cor da borda das barras
+  main = "Distribuição da Pontuação da Matemática",
+  xlab = "Pontuação",
+  ylab = "Quantidade"
+)
+
+```
+
+```{r}
+# Criar o histograma
+hist(
+  df$ciencias,
+  breaks = 10,         # Número de intervalos (bins)
+  col = "skyblue",     # Cor das barras
+  border = "black",    # Cor da borda das barras
+  main = "Distribuição da Pontuação Da Ciências",
+  xlab = "Pontuação",
+  ylab = "Quantidade"
+)
+
+```
+
+```{r}
+# Criar o histograma
+hist(
+  df$estsociais,
+  breaks = 10,         # Número de intervalos (bins)
+  col = "skyblue",     # Cor das barras
+  border = "black",    # Cor da borda das barras
+  main = "Distribuição da Pontuação Estsociais",
+  xlab = "Pontuação",
+  ylab = "Quantidade"
+)
+
+```
+
+```{r}
+# Reorganizar os dados com reshape
+df_long <- reshape(df, 
+                   varying = c("estsociais", "ciencias", "matematica", "escrever", "ler"), 
+                   v.names = "nota", 
+                   timevar = "disciplina", 
+                   times = c("estsociais", "ciencias", "matematica", "escrever", "ler"), 
+                   direction = "long")
+
+# Calcular a média das notas por gênero e disciplina
+df_long_summary <- df_long %>%
+  group_by(genero, disciplina) %>%
+  summarise(media_nota = mean(nota, na.rm = TRUE), .groups = 'drop')
+
+# Criar o gráfico de sobreposição
+ggplot(df_long_summary, aes(x = factor(genero), y = media_nota, fill = disciplina, group = disciplina)) +
+  geom_bar(stat = "identity", position = "dodge", width = 0.7) +  # Usar estatísticas de identidade (já calculadas)
+  geom_text(aes(label = round(media_nota, 2)), 
+            vjust = -0.5, color = "black", size = 3) +  # Adicionando os valores das médias nas barras
+  facet_wrap(~ disciplina, scales = "free_y") +  # Facetas para cada disciplina
+  xlab("Gênero") +
+  ylab("Média das Notas") +
+  scale_x_discrete(labels = c("Masculino", "Feminino")) +
+  scale_fill_manual(values = c("blue", "red", "green", "purple", "orange")) +  # Cores para cada disciplina
+  ggtitle("Média das Notas por Gênero e Disciplina")
+
+```
+
+```{r}
+# Reorganizar os dados com reshape
+df_long <- reshape(df, 
+                   varying = c("estsociais", "ciencias", "matematica", "escrever", "ler"), 
+                   v.names = "nota", 
+                   timevar = "disciplina", 
+                   times = c("estsociais", "ciencias", "matematica", "escrever", "ler"), 
+                   direction = "long")
+
+# Calcular a média das notas por raça e disciplina
+df_long_summary <- df_long %>%
+  group_by(raca, disciplina) %>%
+  summarise(media_nota = mean(nota, na.rm = TRUE), .groups = 'drop')
+
+# Criar o gráfico de sobreposição
+ggplot(df_long_summary, aes(x = factor(raca), y = media_nota, fill = disciplina, group = disciplina)) +
+  geom_bar(stat = "identity", position = "dodge", width = 0.7) +  # Usar estatísticas de identidade (já calculadas)
+  geom_text(aes(label = round(media_nota, 2)), 
+            vjust = -0.5, color = "black", size = 3) +  # Adicionando os valores das médias nas barras
+  facet_wrap(~ disciplina, scales = "free_y") +  # Facetas para cada disciplina
+  xlab("Raça") +
+  ylab("Média das Notas") +
+  scale_x_discrete(labels = c("Hispânica", "Asiática", "Negra", "Branca")) +  # Labels com os valores reais de 'raca'
+  scale_fill_manual(values = c("blue", "red", "green", "purple", "orange")) +  # Cores para cada disciplina
+  ggtitle("Média das Notas por Raça e Disciplina")
+
+```
+
+```{r}
+library(dplyr)
+library(ggplot2)
+
+# Reorganizar os dados com reshape
+df_long <- reshape(df, 
+                   varying = c("estsociais", "ciencias", "matematica", "escrever", "ler"), 
+                   v.names = "nota", 
+                   timevar = "disciplina", 
+                   times = c("estsociais", "ciencias", "matematica", "escrever", "ler"), 
+                   direction = "long")
+
+# Calcular a média das notas por classe social e disciplina
+df_long_summary <- df_long %>%
+  group_by(clasocial, disciplina) %>%
+  summarise(media_nota = mean(nota, na.rm = TRUE), .groups = 'drop')
+
+# Criar o gráfico de sobreposição
+ggplot(df_long_summary, aes(x = factor(clasocial), y = media_nota, fill = disciplina, group = disciplina)) +
+  geom_bar(stat = "identity", position = "dodge", width = 0.7) +  # Usar estatísticas de identidade (já calculadas)
+  geom_text(aes(label = round(media_nota, 2)), 
+            vjust = -0.5, color = "black", size = 3) +  # Adicionando os valores das médias nas barras
+  facet_wrap(~ disciplina, scales = "free_y") +  # Facetas para cada disciplina
+  xlab("Classe Social") +
+  ylab("Média das Notas") +
+  scale_x_discrete(labels = c("Baixa", "Média", "Alta")) +  # Labels com os valores reais de 'clasocial'
+  scale_fill_manual(values = c("blue", "red", "green", "purple", "orange")) +  # Cores para cada disciplina
+  ggtitle("Média das Notas por Classe Social e Disciplina")
+```
