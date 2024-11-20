@@ -1,6 +1,6 @@
 ---
 title: "Um Exemplo de Análise Exploratória dos Dados"
-subtitle: "bservações que foram amostradas aleatoriamente da pesquisa High School and Beyond (2024), uma pesquisa conduzida com alunos do último ano do ensino médio pelo National Center of Education Statistics"
+subtitle: "Observações que foram amostradas aleatoriamente da pesquisa High School and Beyond (2024), uma pesquisa conduzida com alunos do último ano do ensino médio pelo National Center of Education Statistics"
 author: "GRUPO-04"
 affiliation: "FAAC/UNESP-Bauru"
 date: 09/11/2024
