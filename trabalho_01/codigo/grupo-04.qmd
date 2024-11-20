@@ -96,6 +96,7 @@ str(hsb2f)
 Em seguida, vamos verificar e tratar valores ausentes, checar inconsistências e tipos de dados.
 
 #### 3.2.1 Validação de valores ausentes
+
 Podemos definir valores ausentes, valores que não possuem valores em nossa amostra de dados, imaginando um data.frame 2x5, conforme demonstrado abaixo:
 
 ``` r
@@ -178,7 +179,7 @@ corrplot(cor_matrix, method="circle")
 
 ```{r}
 # Contar as ocorrências de cada valor na coluna 'genero'
-gender_counts <- table(df$genero)
+gender_counts <- table(hsb2f$genero)
 
 # Criar o gráfico de barras
 barplot(
@@ -194,7 +195,7 @@ barplot(
 
 ```{r}
 # Contar as ocorrências de cada valor na coluna 'raca'
-contagem_valores_unicos <- table(df$raca)
+contagem_valores_unicos <- table(hsb2f$raca)
 print(contagem_valores_unicos)
 
 # Criar o gráfico de barras
@@ -211,7 +212,7 @@ barplot(
 
 ```{r}
 # Contar as ocorrências de cada valor na coluna 'clasocial'
-contagem_valores_unicos <- table(df$clasocial)
+contagem_valores_unicos <- table(hsb2f$clasocial)
 print(contagem_valores_unicos)
 
 # Criar o gráfico de barras
@@ -228,7 +229,7 @@ barplot(
 
 ```{r}
 # Contar as ocorrências de cada valor na coluna 'tipescola'
-contagem_valores_unicos <- table(df$tipescola)
+contagem_valores_unicos <- table(hsb2f$tipescola)
 print(contagem_valores_unicos)
 
 # Criar o gráfico de barras
@@ -245,7 +246,7 @@ barplot(
 
 ```{r}
 # Contar as ocorrências de cada valor na coluna 'programa'
-contagem_valores_unicos <- table(df$programa)
+contagem_valores_unicos <- table(hsb2f$programa)
 print(contagem_valores_unicos)
 
 # Criar o gráfico de barras
@@ -263,7 +264,7 @@ barplot(
 ```{r}
 # Criar o histograma
 hist(
-  df$ler,
+  hsb2f$ler,
   breaks = 10,         # Número de intervalos (bins)
   col = "skyblue",     # Cor das barras
   border = "black",    # Cor da borda das barras
@@ -277,7 +278,7 @@ hist(
 ```{r}
 # Criar o histograma
 hist(
-  df$escrever,
+  hsb2f$escrever,
   breaks = 10,         # Número de intervalos (bins)
   col = "skyblue",     # Cor das barras
   border = "black",    # Cor da borda das barras
@@ -291,7 +292,7 @@ hist(
 ```{r}
 # Criar o histograma
 hist(
-  df$matematica,
+  hsb2f$matematica,
   breaks = 10,         # Número de intervalos (bins)
   col = "skyblue",     # Cor das barras
   border = "black",    # Cor da borda das barras
@@ -305,7 +306,7 @@ hist(
 ```{r}
 # Criar o histograma
 hist(
-  df$ciencias,
+  hsb2f$ciencias,
   breaks = 10,         # Número de intervalos (bins)
   col = "skyblue",     # Cor das barras
   border = "black",    # Cor da borda das barras
@@ -319,7 +320,7 @@ hist(
 ```{r}
 # Criar o histograma
 hist(
-  df$estsociais,
+  hsb2f$estsociais,
   breaks = 10,         # Número de intervalos (bins)
   col = "skyblue",     # Cor das barras
   border = "black",    # Cor da borda das barras
@@ -332,7 +333,7 @@ hist(
 
 ```{r}
 # Reorganizar os dados com reshape
-df_long <- reshape(df, 
+df_long <- reshape(hsb2f, 
                    varying = c("estsociais", "ciencias", "matematica", "escrever", "ler"), 
                    v.names = "nota", 
                    timevar = "disciplina", 
@@ -360,7 +361,7 @@ ggplot(df_long_summary, aes(x = factor(genero), y = media_nota, fill = disciplin
 
 ```{r}
 # Reorganizar os dados com reshape
-df_long <- reshape(df, 
+df_long <- reshape(hsb2f, 
                    varying = c("estsociais", "ciencias", "matematica", "escrever", "ler"), 
                    v.names = "nota", 
                    timevar = "disciplina", 
@@ -391,7 +392,7 @@ library(dplyr)
 library(ggplot2)
 
 # Reorganizar os dados com reshape
-df_long <- reshape(df, 
+df_long <- reshape(hsb2f, 
                    varying = c("estsociais", "ciencias", "matematica", "escrever", "ler"), 
                    v.names = "nota", 
                    timevar = "disciplina", 
