@@ -1,6 +1,6 @@
 ---
 title: "Um Exemplo de Análise Exploratória dos Dados"
-subtitle: "bservações que foram amostradas aleatoriamente da pesquisa High School and Beyond (2024), uma pesquisa conduzida com alunos do último ano do ensino médio pelo National Center of Education Statistics"
+subtitle: "Observações que foram amostradas aleatoriamente da pesquisa High School and Beyond (2024), uma pesquisa conduzida com alunos do último ano do ensino médio pelo National Center of Education Statistics"
 author: "GRUPO-04"
 affiliation: "FAAC/UNESP-Bauru"
 date: 09/11/2024
@@ -12,7 +12,21 @@ format:
 editor: visual
 ---
 
-### 2.1. Carregamento dos Dados
+### 1. Introdução
+
+Este trabalho tem como objetivo aplicar técnicas fundamentais de Análise Exploratória de Dados (AED) no dataset *hsb2f*, fornecido no contexto da disciplina de Ciência de Dados, do Programa de Pós-Graduação em Mídias e Tecnologias da UNESP Bauru.
+
+A AED foi realizada como uma etapa essencial para o desenvolvimento de competências analíticas, afim de extrair insights, identificar padrões e verificar a consistência dos dados fornecidos.
+
+Antes da análise propriamente dita, foram realizadas etapas preliminares de processamento dos dados. O carregamento correto dos dados estabeleceu a base para todas as etapas subsequentes, enquanto a limpeza dos dados eliminou inconsistências, como valores nulos ou discrepâncias que poderiam enviesar as análises. Nesse sentido, a normalização e padronização dos dados, quando necessárias, asseguraram que as variáveis estivessem em uma escala comparável.
+
+Neste trabalho, após o carregamento do conjunto de dados, foi realizada uma análise dos valores ausentes. Em seguida, conduziu-se uma análise descritiva, explorando estatísticas univariadas para entender a distribuição das variáveis. Por fim, foi feita uma análise de correlação para investigar relações potenciais entre as variáveis, estabelecendo visualizações gráficas dos dados capazes de facilitar a identificação de padrões para estudos futuros.
+
+Os tópicos abordados estão estruturados sequencialmente em **Carregamento dos Dados** – onde abordou-se o acesso e organização inicial do dataset; **Limpeza dos Dados** – onde ocorreu a identificação e tratamento de valores nulos e inconsistências; **Análise Descritiva** – onde ocorreu a codificação para obter a visualização das características estatísticas principais do conjunto de dados; e **Análise de Correlação** – ou a codificação para visualização das relações entre variáveis e possíveis implicações.
+
+Esse processo estruturado evidenciou a importância de um passo-a-passo bem definido na análise exploratória, preparando o terreno para estudos mais aprofundados que contribuam para a tomada de decisões fundamentadas.
+
+### 2. Carregamento dos Dados
 
 Instalação dos pacotes
 
@@ -77,9 +91,13 @@ Já o comando *str* nos demonstra a leitura do arquivo, mas de forma compactada,
 str(hsb2f)
 ```
 
-3.2 Limpeza dos Dados Em seguida, vamos verificar e tratar valores ausentes, checar inconsistências e tipos de dados.
+### 3.2 Limpeza dos Dados
 
-3.2.1 Validação de valores ausentes Podemos definir valores ausaentes, valores que não possuem valores em nossa amostra de dados, imaginando um data.frame 2x5, conforme demonstrado abaixo:
+Em seguida, vamos verificar e tratar valores ausentes, checar inconsistências e tipos de dados.
+
+#### 3.2.1 Validação de valores ausentes
+
+Podemos definir valores ausentes, valores que não possuem valores em nossa amostra de dados, imaginando um data.frame 2x5, conforme demonstrado abaixo:
 
 ``` r
 data.frame(
@@ -111,7 +129,9 @@ Por fim, o comando *summary* que por padrão sumariza todas as "colunas" existen
 summary(hsb2f)
 ```
 
-3.3 Análise Descritiva Agora, vamos realizar uma análise descritiva detalhada para nos familiarizarmos com os dados, organizá-los e sintetizá-los.
+### 3.3 Análise Descritiva
+
+Agora, vamos realizar uma análise descritiva detalhada para nos familiarizarmos com os dados, organizá-los e sintetizá-los.
 
 Utilizando o comando *table* podemos contar as amostras separadas pelas variações existentes nos dados.
 
@@ -127,7 +147,9 @@ O comando *hist* no possibilita efetuar a leitura dos dados númericos existente
 hist(hsb2f$ler, main="Distribuição da Pontuação de Leitura", xlab="Pontuação de Leitura", ylab="Frequência")
 ```
 
-3.4 Análise de Correlação Por fim, vamos realizar uma análise de correlação entre as variáveis do dataset.
+### 3.4 Análise de Correlação
+
+Por fim, vamos realizar uma análise de correlação entre as variáveis do dataset.
 
 Uma matriz de correlação é uma tabela que mostra os coeficientes de correlação entre várias variáveis. Cada célula na matriz mostra a correlação entre duas variáveis. A correlação é uma medida estatística que indica a extensão em que duas variáveis estão linearmente relacionadas. Os valores de correlação variam de -1 a 1:
 
@@ -157,7 +179,7 @@ corrplot(cor_matrix, method="circle")
 
 ```{r}
 # Contar as ocorrências de cada valor na coluna 'genero'
-gender_counts <- table(df$genero)
+gender_counts <- table(hsb2f$genero)
 
 # Criar o gráfico de barras
 barplot(
@@ -173,7 +195,7 @@ barplot(
 
 ```{r}
 # Contar as ocorrências de cada valor na coluna 'raca'
-contagem_valores_unicos <- table(df$raca)
+contagem_valores_unicos <- table(hsb2f$raca)
 print(contagem_valores_unicos)
 
 # Criar o gráfico de barras
@@ -190,7 +212,7 @@ barplot(
 
 ```{r}
 # Contar as ocorrências de cada valor na coluna 'clasocial'
-contagem_valores_unicos <- table(df$clasocial)
+contagem_valores_unicos <- table(hsb2f$clasocial)
 print(contagem_valores_unicos)
 
 # Criar o gráfico de barras
@@ -207,7 +229,7 @@ barplot(
 
 ```{r}
 # Contar as ocorrências de cada valor na coluna 'tipescola'
-contagem_valores_unicos <- table(df$tipescola)
+contagem_valores_unicos <- table(hsb2f$tipescola)
 print(contagem_valores_unicos)
 
 # Criar o gráfico de barras
@@ -224,7 +246,7 @@ barplot(
 
 ```{r}
 # Contar as ocorrências de cada valor na coluna 'programa'
-contagem_valores_unicos <- table(df$programa)
+contagem_valores_unicos <- table(hsb2f$programa)
 print(contagem_valores_unicos)
 
 # Criar o gráfico de barras
@@ -242,7 +264,7 @@ barplot(
 ```{r}
 # Criar o histograma
 hist(
-  df$ler,
+  hsb2f$ler,
   breaks = 10,         # Número de intervalos (bins)
   col = "skyblue",     # Cor das barras
   border = "black",    # Cor da borda das barras
@@ -256,7 +278,7 @@ hist(
 ```{r}
 # Criar o histograma
 hist(
-  df$escrever,
+  hsb2f$escrever,
   breaks = 10,         # Número de intervalos (bins)
   col = "skyblue",     # Cor das barras
   border = "black",    # Cor da borda das barras
@@ -270,7 +292,7 @@ hist(
 ```{r}
 # Criar o histograma
 hist(
-  df$matematica,
+  hsb2f$matematica,
   breaks = 10,         # Número de intervalos (bins)
   col = "skyblue",     # Cor das barras
   border = "black",    # Cor da borda das barras
@@ -284,7 +306,7 @@ hist(
 ```{r}
 # Criar o histograma
 hist(
-  df$ciencias,
+  hsb2f$ciencias,
   breaks = 10,         # Número de intervalos (bins)
   col = "skyblue",     # Cor das barras
   border = "black",    # Cor da borda das barras
@@ -298,7 +320,7 @@ hist(
 ```{r}
 # Criar o histograma
 hist(
-  df$estsociais,
+  hsb2f$estsociais,
   breaks = 10,         # Número de intervalos (bins)
   col = "skyblue",     # Cor das barras
   border = "black",    # Cor da borda das barras
@@ -311,7 +333,7 @@ hist(
 
 ```{r}
 # Reorganizar os dados com reshape
-df_long <- reshape(df, 
+df_long <- reshape(hsb2f, 
                    varying = c("estsociais", "ciencias", "matematica", "escrever", "ler"), 
                    v.names = "nota", 
                    timevar = "disciplina", 
@@ -339,7 +361,7 @@ ggplot(df_long_summary, aes(x = factor(genero), y = media_nota, fill = disciplin
 
 ```{r}
 # Reorganizar os dados com reshape
-df_long <- reshape(df, 
+df_long <- reshape(hsb2f, 
                    varying = c("estsociais", "ciencias", "matematica", "escrever", "ler"), 
                    v.names = "nota", 
                    timevar = "disciplina", 
@@ -370,7 +392,7 @@ library(dplyr)
 library(ggplot2)
 
 # Reorganizar os dados com reshape
-df_long <- reshape(df, 
+df_long <- reshape(hsb2f, 
                    varying = c("estsociais", "ciencias", "matematica", "escrever", "ler"), 
                    v.names = "nota", 
                    timevar = "disciplina", 
