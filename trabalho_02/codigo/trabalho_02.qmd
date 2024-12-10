@@ -1,0 +1,172 @@
+---
+title: "Análise Exploratória de Dados"
+subtitle: ""
+author: "GRUPO-04"
+affiliation: "FAAC/UNESP-Bauru"
+date: 09/11/2024
+date-format: DD/MM/YYYY
+format: 
+  html: default
+  pdf: default
+  docx: default
+editor: visual
+---
+
+# Carregamento dos Dados
+
+Instalação dos pacotes
+
+```{r}
+# Instalar os pacotes
+if(!('tidyverse') %in% installed.packages()) install.packages('tidyverse')
+if(!('readr') %in% installed.packages()) install.packages('readr')
+if(!('summarytools') %in% installed.packages()) install.packages('summarytools')
+if(!('ggplot2') %in% installed.packages()) install.packages('ggplot2')
+if(!('corrplot') %in% installed.packages()) install.packages('corrplot')
+```
+
+#Carregamento dos pacotes
+
+```{r}
+library(tidyverse)
+library(readr)
+library(summarytools)
+library(ggplot2)
+library(corrplot)
+```
+
+
+# Carregamento dos Dados
+
+```{r}
+# Carregar o dataset e verifica as primeiras linhas
+pessoas_por_idade <- read.csv("../dados/dados_pessoas_por_idade.csv",
+                              sep=";", check.names=FALSE)
+head(pessoas_por_idade)
+```
+
+# Validação de valores ausentes
+
+```{r}
+# Subtitui valores ausentes de "..." por <NA>
+pessoas_por_idade[pessoas_por_idade == "..."] <- NA
+
+# Remover valores ausentes (exemplo: remover linhas com NA)
+pessoas_por_idade <- na.omit(pessoas_por_idade)
+
+# Checar inconsistências e tipos de dados
+summary(pessoas_por_idade)
+```
+
+# Análise de Dados
+## Tendência populacional das faixa etárias de 0 a 4 anos e 60 a 69 anos:
+
+```{r}
+# Filtrar a faixa etária "0 a 4 anos"
+faixa_0_4 <- pessoas_por_idade[pessoas_por_idade$`Grupo de Idade` == "0 a 4 anos", 2:14]
+faixa_60_69 <- pessoas_por_idade[pessoas_por_idade$`Grupo de Idade` == "60 a 69 anos", 2:14]
+
+# Mantem valores númericos e substitui valores nulos por 0"
+faixa_0_4 <- as.numeric(faixa_0_4)
+faixa_0_4[is.na(faixa_0_4)] <- 0
+
+faixa_60_69 <- as.numeric(faixa_60_69)
+faixa_60_69[is.na(faixa_60_69)] <- 0
+
+# Criar gráfico de linha comparativo
+anos <- c('1872', '1890', '1900', '1920', '1940', '1950', '1960', '1970', '1980', '1991', '2000', '2010', '2022')
+plot(anos, faixa_0_4, type = "o", col = "blue", 
+     xlab = "Ano", ylab = "População", main = "Tendência populacional: Faixa Etária")
+lines(anos, faixa_60_69, type = "o", col = "purple")
+legend("topleft", legend = c("0 a 4 anos", "60 a 69 anos"), col = c("blue", "purple"), lty = 1, pch = 1)
+
+```
+
+## Crescimento de 1872 a 2022 para cada faixa etária e faixa etária com maior crescimento:
+
+```{r}
+pessoas_por_idade$Crescimento_Por_Faixa_Etaria <- pessoas_por_idade$`2022` - pessoas_por_idade$`1872`
+
+# Visualizar resultados
+print(pessoas_por_idade[, c("Grupo de Idade", "Crescimento_Por_Faixa_Etaria")])
+
+faixa_maior_crescimento <- pessoas_por_idade$`Grupo de Idade`[which.max(pessoas_por_idade$Crescimento_Por_Faixa_Etaria)]
+cat("Faixa etária com maior crescimento:", faixa_maior_crescimento, "\n")
+```
+
+## Média de crescimento anual:
+
+```{r}
+anos_dif <- 2022 - 1872
+pessoas_por_idade$Taxa_Crescimento <- (pessoas_por_idade$`2022` / pessoas_por_idade$`1872`)^(1 / anos_dif) - 1
+
+barplot(pessoas_por_idade$Taxa_Crescimento, 
+        names.arg = pessoas_por_idade$`Grupo de Idade`, 
+        col = "cornflowerblue", 
+        xlab = "Faixa Etária", 
+        ylab = "Taxa de Crescimento", 
+        main = "Taxa de Crescimento Populacional (1872-2022)",
+        las = 2,
+        cex.names = 0.8) 
+```
+
+## Média de crescimento nos últimos 10 anos:
+
+```{r}
+anos_dif <- 2022 - 2012
+pessoas_por_idade$Taxa_Crescimento_10 <- (pessoas_por_idade$`2022` / pessoas_por_idade$`2010`)^(1 / anos_dif) - 1
+
+barplot(pessoas_por_idade$Taxa_Crescimento_10, 
+        names.arg = pessoas_por_idade$`Grupo de Idade`, 
+        col = "darkslateblue", 
+        xlab = "Faixa Etária", 
+        ylab = "Taxa de Crescimento", 
+        main = "Taxa de Crescimento Populacional (2012-2022)",
+        las = 2,
+        cex.names = 0.8) 
+```
+
+## População total ao longo dos anos:
+
+```{r}
+pop_total <- colSums(pessoas_por_idade[, 2:14])
+
+# Gráfico de linhas
+plot(c(1872, 1890, 1900, 1920, 1940, 1950, 1960, 1970, 1980, 1991, 2000, 2010, 2022), pop_total, type = "o", col = "dodgerblue", xlab = "Ano", ylab = "População Total", main = "População total (1872-2022)")
+
+```
+
+## Projeção de crescimento para 2050 (taxa de crescimento geral):
+
+```{r}
+# Projeção para 1960
+anos_projecao <- 2050 - 2022
+pessoas_por_idade$Projecao_2050_geral <- pessoas_por_idade$`2022` * ((1 + pessoas_por_idade$Taxa_Crescimento)^anos_projecao)
+
+# Visualizar projeções
+plot(1:nrow(pessoas_por_idade), pessoas_por_idade$Projecao_2050_geral, 
+     type = "o", col = "darkviolet", 
+     xaxt = "n",
+     xlab = "Faixa Etária", 
+     ylab = "Projeção de População (2050)", 
+     main = "Projeção Populacional para 2050 (taxa de crescimento de 1872 a 2022)")
+
+axis(1, at = 1:nrow(pessoas_por_idade), labels = pessoas_por_idade$`Grupo de Idade`, las = 2, cex.axis = 0.8)
+
+```
+
+## Projeção de crescimento para 2050 (taxa de crescimento nos últimos 10 anos):
+
+```{r}
+pessoas_por_idade$Projecao_2050_dez_anos <- pessoas_por_idade$`2022` * ((1 + pessoas_por_idade$Taxa_Crescimento_10)^anos_projecao)
+
+# Visualizar projeções
+plot(1:nrow(pessoas_por_idade), pessoas_por_idade$Projecao_2050_dez_anos, 
+     type = "o", col = "darkblue", 
+     xaxt = "n",
+     xlab = "Faixa Etária", 
+     ylab = "Projeção de População (2050)", 
+     main = "Projeção Populacional para 2050 (taxa de crescimento de 2012 a 2022)")
+
+axis(1, at = 1:nrow(pessoas_por_idade), labels = pessoas_por_idade$`Grupo de Idade`, las = 2, cex.axis = 0.8)
+```
