@@ -1,0 +1,226 @@
+---
+title: "Seguindo a Tendência - O Que a Pirâmide Etária Brasileira nos Tem a Dizer?"
+author: "GRUPO-04"
+affiliation: "FAAC/UNESP-Bauru"
+date: 09/11/2024
+date-format: DD/MM/YYYY
+format: 
+  html: default
+  pdf: default    
+  docx: default 
+editor: visual
+---
+
+### 2.1. Carregamento dos Dados
+
+Instalação dos pacotes
+
+```{r}
+# Instalar os pacotes
+if(!('tidyverse') %in% installed.packages()) install.packages('tidyverse')
+if(!('readr') %in% installed.packages()) install.packages('readr')
+if(!('summarytools') %in% installed.packages()) install.packages('summarytools')
+if(!('ggplot2') %in% installed.packages()) install.packages('ggplot2')
+if(!('corrplot') %in% installed.packages()) install.packages('corrplot')
+
+```
+
+Carregamento dos pacotes
+
+```{r}
+library(tidyverse)
+library(readr)
+library(summarytools)
+library(ggplot2)
+library(corrplot)
+library(tidyverse)
+```
+
+## 3. Análise Exploratória de Dados com hsb2f
+
+Neste item, realizaremos uma Análise Exploratória de Dados (AED) utilizando o dataset `hsb2f` localizado na pasta `grupo-04/dados/`.
+
+### 3.1 Carregamento dos Dados
+
+Primeiro, vamos carregar o arquivo CSV no R em uma váriavel chamada pessoas_por_idade e verificar as primeiras linhas do dataset e a estrutura dos dados.
+
+```{r}
+pessoas_por_idade <- read.csv("../dados/dados_pessoas_por_idade.csv", sep=";",check
+```
+
+Após o carregamento do conteúdo de nossos dados exploratórios na variável pessoas_por_idade , podemos utilizar o comando *head* para identificar as primeiras linhas do nosso dataset.
+
+Por padrão o comando *head* traz as 6 primeiras linhas do arquivo, esse modelo é utilizado pois essa quantidade de dados é de simples leitura e validação do contúedo.
+
+```{r}
+# Verificar as primeiras linhas do dataset
+head(pessoas_por_idade)
+```
+
+É possível também mudar a quantidade de registros conforme docuemntação da linguagem R, que pode ser analisada através do código
+
+```{r}
+?head
+```
+
+Abaixo houve um tratamento dos dados;
+
+```{r}
+# Subtitui valores ausentes de "..." por <NA>
+pessoas_por_idade[pessoas_por_idade == "..."] <- NA
+
+```
+
+```{r}
+# Checar inconsistências e tipos de dados
+summary(pessoas_por_idade)
+```
+
+Análise de dados
+
+A pirâmide etária é uma das representações gráficas mais emblemáticas na demografia, sendo amplamente utilizada para ilustrar a distribuição da população por idade e sexo. No entanto, além de sua simplicidade visual, essa ferramenta carrega uma complexidade analítica que exige a integração de métodos técnicos e uma interpretação aprofundada. É nesse contexto que a Ciência de Dados desempenha um papel crucial: não apenas na construção dessa representação, mas na análise e compreensão de seus significados e implicações.
+
+Este relatório tem como objetivo explorar a pirâmide etária brasileira a partir de uma abordagem técnica e informativa. Busca-se responder não apenas o que é essa estrutura gráfica, mas também o que ela revela sobre a dinâmica populacional e os impactos do envelhecimento na sociedade brasileira.
+
+A pirâmide etária organiza os dados populacionais em dois eixos principais: o eixo vertical, que agrupa a população por sexo (masculino e feminino), e o eixo horizontal, que representa as faixas etárias, desde as idades mais jovens na base até as mais avançadas no topo. Por meio dessa visualização, é possível identificar padrões e tendências, como o crescimento ou declínio de determinados grupos etários, além de realizar comparações entre regiões ou com outros países.
+
+Para a construção de uma pirâmide etária, seguem três etapas fundamentais:
+
+Coleta dos dados populacionais por sexo e faixa etária; Cálculo do percentual populacional correspondente a cada grupo etário; Elaboração de gráficos de barras para representar os percentuais de forma visual e comparativa. SUBTÍTULO: O Contexto Etário Brasileiro
+
+A estrutura etária do Brasil é resultado de um longo processo histórico, marcado por transformações econômicas, sociais e culturais que moldaram a demografia nacional. Desde o primeiro censo realizado em 1872, o país vem passando por mudanças significativas, refletidas diretamente na configuração de sua pirâmide populacional.
+
+Historicamente, a pirâmide etária brasileira apresentava uma base ampla, indicando uma população majoritariamente jovem. Contudo, a partir da década de 1970, com a redução das taxas de fecundidade e o aumento da expectativa de vida, esse padrão começou a mudar. Em 2023, observa-se uma base mais estreita e um topo em expansão, caracterizando o envelhecimento progressivo da população.
+
+Esse envelhecimento traz impactos relevantes em diversas esferas, desde a economia e políticas públicas até os sistemas de saúde e previdência. Por meio de dados oficiais do Instituto Brasileiro de Geografia e Estatística (IBGE) e gráficos elaborados no RStudio, este relatório apresenta uma análise detalhada da evolução etária do Brasil, traçando paralelos entre passado, presente e projeções futuras.
+
+Ao longo das próximas seções, exploraremos como essas transformações moldam o panorama populacional e os desafios e oportunidades que emergem desse cenário.
+
+Tendência populacional das faixa etárias de 0 a 4 anos e 60 a 69 anos:
+
+```{r}
+# Filtrar a faixa etária "0 a 4 anos"
+faixa_0_4 <- pessoas_por_idade[pessoas_por_idade$`Grupo de Idade` == "0 a 4 anos", 2
+faixa_60_69 <- pessoas_por_idade[pessoas_por_idade$`Grupo de Idade` == "60 a 69 anos
+# Mantem valores númericos e substitui valores nulos por 0"
+faixa_0_4 <- as.numeric(faixa_0_4)
+faixa_0_4[is.na(faixa_0_4)] <- 0
+faixa_60_69 <- as.numeric(faixa_60_69)
+faixa_60_69[is.na(faixa_60_69)] <- 0
+# Criar gráfico de linha
+anos <- c('1872', '1890', '1900', '1920', '1940', '1950', '1960', '1970', '1980', '1
+plot(anos, faixa_0_4, type = "o", col = "blue",
+xlab = "Ano", ylab = "População", main = "Tendência populacional:Faixa Etária")
+lines(anos, faixa_60_69, type = "o", col = "purple")
+legend("topleft", legend = c("0 a 4 anos", "60 a 69 anos"), col = c("blue", "purple
+```
+
+```{r}
+# Crescimento
+pessoas_por_idade$Crescimento_Por_Faixa_Etaria <- pessoas_por_idade$`2022` - pessoas
+# Visualizar resultados
+print(pessoas_por_idade[, c("Grupo de Idade", "Crescimento_Por_Faixa_Etaria")])
+```
+
+```{r}
+faixa_maior_crescimento <- pessoas_por_idade$`Grupo de Idade`[which.max(pessoas_por_
+cat("Faixa etária com maior crescimento:", faixa_maior_crescimento, "\n")
+```
+
+Faixa etária com maior crescimento: 30 a 39 anos Taxa média de crescimento anual por faixa etária:
+
+```{r}
+# Taxa média anual de crescimento
+anos_dif <- 2022 - 1872
+pessoas_por_idade$Taxa_Crescimento <- (pessoas_por_idade$`2022` / pessoas_por_idade$
+# Visualizar taxas
+print(pessoas_por_idade[, c("Grupo de Idade", "Taxa_Crescimento")])
+
+```
+
+```{r}
+barplot(pessoas_por_idade$Taxa_Crescimento,
+names.arg = pessoas_por_idade$`Grupo de Idade`,
+col = "lightgreen",
+xlab = "Faixa Etária",
+ylab = "Taxa de Crescimento",
+main = "Taxa de Crescimento Populacional (1872-2022)",
+las = 2,
+cex.names = 0.8)
+```
+
+Taxa de crescimento nos últimos 10 anos:
+
+```{r}
+# Taxa média anual de crescimento
+anos_dif_2022 <- 2022 - 2010
+pessoas_por_idade$Taxa_Crescimento_2010 <- (pessoas_por_idade$`2022` / pessoas_por_i
+# Visualizar taxas
+print(pessoas_por_idade[, c("Grupo de Idade", "Taxa_Crescimento_2010")])
+```
+
+```{r}
+barplot(pessoas_por_idade$Taxa_Crescimento_2010,
+names.arg = pessoas_por_idade$`Grupo de Idade`,
+col = "coral",
+xlab = "Faixa Etária",
+ylab = "Taxa de Crescimento",
+População total ao longo dos anos:
+main = "Taxa de Crescimento Populacional (2010-2022)",
+las = 2,
+cex.names = 0.8)
+
+```
+
+```{r}
+# População total ao longo dos anos:
+# Soma da população total por ano
+pop_total <- colSums(pessoas_por_idade[, 2:14])
+# Gráfico de linha
+plot(c(1872, 1890, 1900, 1920, 1940, 1950, 1960, 1970, 1980, 1991, 2000, 2010, 2022)
+xlab = "Ano", ylab = "População Total", main = "População total (1872-2022)")
+
+
+```
+
+```{r}
+# Projeção para 2030 com base na taxa média anual de crescimento de 1872 a 2010
+anos_projecao <- 2030 - 2010
+pessoas_por_idade$Projecao_2030 <- pessoas_por_idade$`2010` * ((1 + pessoas_por_idad
+# Visualizar projeções
+print(pessoas_por_idade[, c("Grupo de Idade", "Projecao_2030")])
+
+
+```
+
+```{r}
+plot(1:nrow(pessoas_por_idade), pessoas_por_idade$Projecao_2030,
+type = "o", col = "red",
+xaxt = "n",
+xlab = "Faixa Etária", ylab = "Projeção de População (2030)",
+main = "Projeção Populacional para 2030 com base na taxa de crescimento entre 1
+Grupo de Idade,
+
+```
+
+```{r}
+# Projeção para 2030 com base na taxa média anual de crescimento de 2010 a 2022
+anos_projecao <- 2030 - 2022
+pessoas_por_idade$Projecao_2030_2 <- pessoas_por_idade$`2022` * ((1 + pessoas_por_id
+# Visualizar projeções
+print(pessoas_por_idade[, c("Grupo de Idade", "Projecao_2030_2")])
+
+
+```
+
+```{r}
+plot(1:nrow(pessoas_por_idade), pessoas_por_idade$Projecao_2030_2,
+type = "o", col = "red",
+xaxt = "n",
+xlab = "Faixa Etária", ylab = "Projeção de População (2030)",
+main = "Projeção Populacional para 2030 com base na taxa de crescimento entre 2
+axis(1, at = 1:nrow(pessoas_por_idade), labels = pessoas_por_idade$`Grupo de Idade`,)
+```
+
+```         
+```
